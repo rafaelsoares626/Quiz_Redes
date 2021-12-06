@@ -3,52 +3,80 @@ package negocio;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Quiz implements Runnable {
 	Socket client; // Recebe o cliente
-	int n; // Controla o número de perguntas do quiz
-	int acertos; // Controla o número de acertos do cliente
-	char[] respostas = { 'A', 'C', 'A', 'C', 'B' }; //Armazena as respostas corretas
-	String[] perguntas = { "Esporte mais popular do Brasil: A) Futebol B) Volei C) Boxe",
-			"Luta marcial brasileira: A) Briga de Galo B) Pipoca de Kannário C) Capoeira",
-			"Ritmo matriz da Bolsa Nova: A) Samba B) Arrocha C) Pagodão",
-			"Festa popular: A) Eleições B) Paredão do Posto Shell do Imbuí C) Carnaval",
-			"Iguaria tipica da Bahia: A) Dogão da Lapa B) Acarajé  C) Pão com ovo" };
-	//O vetor "perguntas" armazena as questões do quiz
+	int contador; // Controla o nï¿½mero de perguntas do quiz
+	int acertos; // Controla o nï¿½mero de acertos do cliente
+	char[] respostas = { 'A', 'C', 'A', 'C', 'B', 'A','B' }; //Armazena as respostas corretas
+	ArrayList<Integer> conteiner = new ArrayList();
 
-	//Método construtor, que recebe um cliente como parâmetro
+	String[] perguntas = { "Esporte mais popular do Brasil: A) Futebol B) Volei C) Boxe",
+			"Luta marcial brasileira: A) Briga de Galo B) Pipoca de Kannario C) Capoeira",
+			"Ritmo matriz da Bolsa Nova: A) Samba B) Arrocha C) Pagodao",
+			"Festa popular: A) Eleicoes B) Paredao do Posto Shell do Imbui C) Carnaval",
+			"AtrÃ¡s do Trio Eletrico: A) NinguÃ©m vai B) SÃ³ nao vai quem ja morreu C) Todo mundo vai",
+			"Maior campeao do Nordestao: A) Vitoria B) Jahia  C) Vitoria da Conquista",
+			"Iguaria tipica da Bahia: A) Dogao da Lapa B) Acaraje  C) Pao com ovo" };
+	//O vetor "perguntas" armazena as questï¿½es do quiz
+
+	//Mï¿½todo construtor, que recebe um cliente como parï¿½metro
 	public Quiz(Socket client) {
 		this.client = client;
-		this.n = 0;
+		this.contador = 0;
 		this.acertos = 0;
 	}
 
 	@Override
 	public void run() {
 		try {
-			//Loop que percorrerá as questões
-			for (this.n = 0; this.n < 5; this.n++) {				
+			
+		
+			for (this.contador = 0; this.contador < 5 ; this.contador++) {
+				
+				Random gerador = new Random();
 				Scanner in = new Scanner(this.client.getInputStream());
 				PrintWriter out = new PrintWriter(this.client.getOutputStream(), true);
-				//Manda as questões para o cliente
-				out.println(this.perguntas[this.n]);
-				//Recebe as respostas do cliente, tratando-as (convertendo para maiúsculas)
-				char s = this.tratarResposta(in.nextLine().charAt(0));
-				//Se a resposta estiver correta
-				if (s == this.respostas[this.n]) {
-					this.acertos++; //Contabiliza-se o número de acertos
-					out.println("Voce acertou!"); //Informa ao cliente que ele acertou a questão
-				} else {
-					//Se a resposta estiver errada, o cliente é informado desse fato, recebendo, também, o gabarito
-					out.println("Voce errou! A resposta correta é a letra " + respostas[n]);
-				}
-				//Se a o atributo "n" for igual a 4, é porque o quiz encerrou
-				if (this.n == 4) {
-					out.println("Voce acertou " + this.acertos + " de 5 questões!");
-					//O cliente é informado da quantidade total de questões que ele acertou
-				}
-			}
+				
+				int number = gerador.nextInt(5); 
+				//System.out.println(number);
+				
+				boolean contains = conteiner.contains(number);
+				//System.out.println(contains);
+				
+
+
+	            if (contains) {
+	            	this.contador = this.contador -1;
+	            }
+	            else {
+	
+						
+						out.println(this.perguntas[number]);
+						
+						//Recebe as respostas do cliente, tratando-as (convertendo para maiï¿½sculas)
+						char s = this.tratarResposta(in.nextLine().charAt(0));
+						//Se a resposta estiver correta
+						if (s == this.respostas[number]) {
+							this.acertos++; //Contabiliza-se o nï¿½mero de acertos
+							out.println("Voce acertou!"); //Informa ao cliente que ele acertou a questï¿½o
+						} else {
+							//Se a resposta estiver errada, o cliente ï¿½ informado desse fato, recebendo, tambï¿½m, o gabarito
+							out.println("Voce errou! A resposta correta eh a letra " + respostas[number]);
+						}
+						//Se a o atributo "n" for igual a 4, ï¿½ porque o quiz encerrou
+						if (this.contador == 4) {
+							out.println("Voce acertou " + this.acertos + " de 5 questoes!");
+							//O cliente ï¿½ informado da quantidade total de questï¿½es que ele acertou
+						}
+						conteiner.add(number);
+	            }
+			}	
+	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
