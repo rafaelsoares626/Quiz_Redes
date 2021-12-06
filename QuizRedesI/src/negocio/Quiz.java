@@ -22,7 +22,7 @@ public class Quiz implements Runnable {
 			"Atrás do Trio Eletrico: A) Ninguém vai B) Só nao vai quem ja morreu C) Todo mundo vai",
 			"Maior campeao do Nordestao: A) Vitoria B) Jahia  C) Vitoria da Conquista",
 			"Iguaria tipica da Bahia: A) Dogao da Lapa B) Acaraje  C) Pao com ovo" };
-	//O vetor "perguntas" armazena as quest�es do quiz
+
 
 	//M�todo construtor, que recebe um cliente como par�metro
 	public Quiz(Socket client) {
@@ -43,10 +43,10 @@ public class Quiz implements Runnable {
 				PrintWriter out = new PrintWriter(this.client.getOutputStream(), true);
 				
 				int number = gerador.nextInt(5); 
-				//System.out.println(number);
+
 				
 				boolean contains = conteiner.contains(number);
-				//System.out.println(contains);
+
 				
 
 
@@ -65,10 +65,10 @@ public class Quiz implements Runnable {
 							this.acertos++; //Contabiliza-se o n�mero de acertos
 							out.println("Voce acertou!"); //Informa ao cliente que ele acertou a quest�o
 						} else {
-							//Se a resposta estiver errada, o cliente � informado desse fato, recebendo, tamb�m, o gabarito
+
 							out.println("Voce errou! A resposta correta eh a letra " + respostas[number]);
 						}
-						//Se a o atributo "n" for igual a 4, � porque o quiz encerrou
+						//Se a o atributo "contador" for igual a 4, é porque o quiz encerrou
 						if (this.contador == 4) {
 							out.println("Voce acertou " + this.acertos + " de 5 questoes!");
 							//O cliente � informado da quantidade total de quest�es que ele acertou
